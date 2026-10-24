@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carte mentale : harcèlement</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap">
+<style>
+:root{--bg:#1d0a42;--text:#f4eefc;--muted:#b9a8dc;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Fjalla One","Arial Narrow",Impact,sans-serif;min-height:100vh}
+header{padding:14px 16px 8px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+h1{font-size:1.2rem;margin:0;font-weight:400;letter-spacing:.02em}
+.hint{margin:2px 0 0;color:var(--muted);font-size:.85rem;font-family:system-ui,sans-serif}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+button{font:inherit;font-size:.85rem;padding:7px 12px;border-radius:999px;border:2px solid #b9a8dc;background:transparent;color:var(--text);cursor:pointer}
+button:hover{background:rgba(255,255,255,.1)}
+button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#adder{display:none;gap:8px;align-items:center;padding:6px 16px 10px;flex-wrap:wrap}
+#adder.on{display:flex}
+#adder input{font:inherit;font-size:1rem;padding:8px 14px;border-radius:999px;border:2px solid #ff6b8e;background:#2b1260;color:var(--text);min-width:200px;flex:1;max-width:320px}
+#box{overflow:auto;height:calc(100vh - 150px);min-height:420px;-webkit-overflow-scrolling:touch;touch-action:none}
+svg{display:block;margin:0 auto}
+g.node{cursor:pointer}
+g.node:focus{outline:none}
+g.node:focus-visible circle.c{stroke:#fff;stroke-width:5}
+@media (prefers-reduced-motion:no-preference){g.node:hover circle.c{stroke:#fff;stroke-width:3}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Carte mentale : harcèlement</h1>
+    <p class="hint">Touchez une bulle pour la développer. La bulle « + » ajoute vos idées. Pincez pour zoomer, glissez pour vous déplacer.</p>
+  </div>
+  <div class="tools">
+    <button id="all">Tout déplier</button>
+    <button id="none">Tout replier</button>
+    <button id="zo" aria-label="Dézoomer">−</button>
+    <button id="zi" aria-label="Zoomer">+</button>
+  </div>
+</header>
+<div id="adder">
+  <span id="adlab" class="hint"></span>
+  <input id="adin" maxlength="60" placeholder="Nouveau mot" aria-label="Nouveau mot">
+  <button id="adok">Ajouter</button>
+  <button id="adno">Annuler</button>
+</div>
+<div id="box"></div>
+
+<script>
+var PAL=[{c:"#ff8a4c",t:"#2a0f52"},{c:"#e0185c",t:"#fff"},{c:"#3ecfb5",t:"#2a0f52"},{c:"#b0586a",t:"#fff"},{c:"#8fe04e",t:"#2a0f52"},{c:"#4aa8d8",t:"#2a0f52"}];
+function N(t,k){return {t:t,k:k||[],o:false}}
+var root=N("Harcèlement",[
+ N("Formes",[
+  N("Moral",[N("Insultes, moqueries"),N("Humiliations"),N("Rumeurs"),N("Mise à l’écart")]),
+  N("Cyberharcèlement",[N("Messages répétés"),N("Photos ou vidéos diffusées"),N("Faux profils"),N("Groupes de discussion")]),
+  N("Sexuel",[N("Propos ou gestes déplacés"),N("Chantage"),N("Envoi forcé de contenus")]),
+  N("Physique",[N("Coups, bousculades"),N("Vols, dégradations")]),
+  N("Discriminatoire",[N("Origine"),N("Handicap"),N("Genre"),N("Orientation")])
+ ]),
+ N("Où ça se passe",[
+  N("École",[N("Cour, couloirs"),N("Cantine"),N("Transports scolaires")]),
+  N("Travail",[N("Pressions, isolement"),N("Critiques constantes"),N("Placardisation")]),
+  N("En ligne",[N("Réseaux sociaux"),N("Messageries"),N("Jeux vidéo")]),
+  N("Espace public")
+ ]),
+ N("Conséquences",[
+  N("Santé mentale",[N("Anxiété"),N("Perte de confiance"),N("Isolement"),N("Dépression")]),
+  N("Santé physique",[N("Troubles du sommeil"),N("Fatigue"),N("Maux de ventre")]),
+  N("Vie scolaire ou pro",[N("Absentéisme"),N("Décrochage"),N("Démission")])
+ ]),
+ N("Agir",[
+  N("Si je suis victime",[N("Parler à un adulte"),N("Garder les preuves"),N("Signaler"),N("Ne pas rester seul·e")]),
+  N("Si je suis témoin",[N("Ne pas relayer"),N("Soutenir la victime"),N("Alerter un adulte")]),
+  N("Si j’ai harcelé",[N("Prendre conscience"),N("Demander de l’aide"),N("Réparer")]),
+  N("Pour les parents",[N("Écouter sans juger"),N("Contacter l’établissement")])
+ ]),
+ N("Ressources",[
+  N("3018",[N("Cyberharcèlement"),N("Gratuit, anonyme, 7j/7")]),
+  N("3020",[N("Harcèlement à l’école")]),
+  N("119",[N("Enfance en danger")]),
+  N("Défenseur des droits"),
+  N("Associations locales")
+ ]),
+ N("Loi",[
+  N("Harcèlement moral"),
+  N("Harcèlement sexuel"),
+  N("Harcèlement scolaire",[N("Délit depuis 2022")]),
+  N("Cyberharcèlement",[N("Circonstance aggravante")])
+ ])
+]);
+root.o=true;
+
+var NS="http://www.w3.org/2000/svg",box=document.getElementById("box");
+var Z=window.innerWidth<600?0.62:0.9,DUR=matchMedia("(prefers-reduced-motion:reduce)").matches?0:900;
+var target=null,live=[],dispB=null,newB=null,raf=0,t0=0,firstRun=true;
+function S(tag,a){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);return e}
+function wrap(t,m){var L=[],c="";t.split(" ").forEach(function(x){if(!c)c=x;else if((c+" "+x).length<=m)c+=" "+x;else{L.push(c);c=x}});if(c)L.push(c);return L}
+function size(n,l){
+  var fs=l==0?26:l==1?17:13,up=l<2,t=up?n.t.toUpperCase():n.t,L=wrap(t,l==0?9:l==1?10:11);
+  var mx=Math.max.apply(null,L.map(function(s){return s.length}));
+  n.fs=fs;n.L=L;n.l=l;
+  n.r=Math.max(l==0?82:l==1?48:32,Math.hypot(mx*fs*(up?.52:.46)/2,L.length*fs*1.15/2)+9);
+}
+function initPar(n,p){n.par=p;n.k.forEach(function(c){initPar(c,n)})}
+initPar(root,null);
+var svg=S("svg",{role:"group","aria-label":"Carte mentale"});svg.style.overflow="visible";
+var lineLayer=S("g",{stroke:"#fff","stroke-width":3.5,"stroke-linecap":"round"}),nodeLayer=S("g",{});
+svg.append(lineLayer,nodeLayer);box.append(svg);
+
+function layout(n,l,ang,R,col,out){
+  size(n,l);n.tx=R*Math.cos(ang);n.ty=R*Math.sin(ang);n.col=col;out.push(n);
+  if(!n.o)return;
+  n.k.forEach(function(c){size(c,l+1)});
+  var pl=n.pl||(n.pl={plus:true,r:19,k:[],par:n});
+  var all=n.k.concat([pl]),maxr=Math.max.apply(null,all.map(function(c){return c.r}));
+  var Rc=R+n.r+maxr+(l==0?72:44),angs=[],i;
+  if(l==0){for(i=0;i<all.length;i++)angs.push(-Math.PI/2+i*2*Math.PI/all.length)}
+  else{
+    var tot=0;for(i=0;i<all.length-1;i++)tot+=(all[i].r+all[i+1].r+12)/Rc;
+    var a=ang-tot/2;for(i=0;i<all.length;i++){angs.push(a);if(i<all.length-1)a+=(all[i].r+all[i+1].r+12)/Rc}
+  }
+  for(i=0;i<n.k.length;i++)layout(n.k[i],l+1,angs[i],Rc,l==0?PAL[i%PAL.length]:n.col,out);
+  var pa=angs[angs.length-1];pl.tx=Rc*Math.cos(pa);pl.ty=Rc*Math.sin(pa);out.push(pl);
+}
+function key(f){return function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}}}
+function ask(n){
+  target=n;document.getElementById("adlab").textContent="Ajouter à « "+n.t+" » :";
+  document.getElementById("adder").classList.add("on");var i=document.getElementById("adin");i.value="";i.focus();
+}
+function mk(n){
+  var g=S("g",{"class":"node",tabindex:0,role:"button"});n.g=g;
+  if(n.plus){
+    g.setAttribute("aria-label","Ajouter à "+n.par.t);
+    var pt=S("text",{y:7,"text-anchor":"middle","font-size":22,fill:"#fff","font-family":"system-ui,sans-serif"});pt.textContent="+";
+    g.append(S("circle",{"class":"c",r:19,fill:"none",stroke:"#fff","stroke-width":2.5,"stroke-dasharray":"5 4"}),pt);
+    var f=function(){ask(n.par)};g.onclick=f;g.onkeydown=key(f);
+  }else{
+    g.setAttribute("aria-label",n.t);
+    var fill,tc;
+    if(n.l==0){fill="#ff6b8e";tc="#fff"}
+    else if(n.l==1){fill=n.col.c;tc=n.col.t}
+    else{fill="color-mix(in srgb,"+n.col.c+" "+(n.l==2?45:30)+"%,#fff)";tc="#25104a"}
+    var c=S("circle",{"class":"c",r:n.r});c.style.fill=fill;g.append(c);
+    var t=S("text",{"text-anchor":"middle",fill:tc,"font-size":n.fs,"font-family":"'Fjalla One','Arial Narrow',Impact,sans-serif"});
+    var lh=n.fs*1.15,y=-(n.L.length-1)*lh/2+n.fs*.36;
+    n.L.forEach(function(s,i){var ts=S("tspan",{x:0,y:y+i*lh});ts.textContent=s;t.append(ts)});
+    g.append(t);
+    var bd=S("g",{});bd.append(S("circle",{cx:n.r*.74,cy:n.r*.74,r:11,fill:"#fff"}));
+    var bt=S("text",{x:n.r*.74,y:n.r*.74+4.5,"text-anchor":"middle","font-size":13,fill:"#25104a","font-family":"system-ui,sans-serif","font-weight":700});
+    bd.append(bt);g.append(bd);n.bd=bd;n.bt=bt;
+    var act=function(){n.o=!n.o;update()};g.onclick=act;g.onkeydown=key(act);
+  }
+  if(n.par){n.ln=S("line");lineLayer.append(n.ln)}
+  nodeLayer.append(g);
+}
+function bdg(n){
+  if(n.plus)return;
+  n.bd.style.display=(!n.o&&n.k.length)?"":"none";n.bt.textContent=n.k.length;
+  n.g.setAttribute("aria-expanded",n.o?"true":"false");
+}
+function draw(n){
+  n.g.setAttribute("transform","translate("+n.dx+" "+n.dy+") scale("+Math.max(n.ds,.001)+")");
+  n.g.setAttribute("opacity",n.da);
+  if(n.ln){var p=n.par;n.ln.setAttribute("x1",p.dx);n.ln.setAttribute("y1",p.dy);n.ln.setAttribute("x2",n.dx);n.ln.setAttribute("y2",n.dy);n.ln.setAttribute("opacity",n.da)}
+}
+function applyB(b){
+  var o=dispB;dispB=b;
+  svg.setAttribute("viewBox",b.x0+" "+b.y0+" "+(b.x1-b.x0)+" "+(b.y1-b.y0));
+  svg.setAttribute("width",(b.x1-b.x0)*Z);svg.setAttribute("height",(b.y1-b.y0)*Z);
+  if(o){box.scrollLeft+=(o.x0-b.x0)*Z;box.scrollTop+=(o.y0-b.y0)*Z}
+}
+function step(now){
+  var p=DUR?Math.min(1,(now-t0)/DUR):1,q=DUR?Math.min(1,(now-t0)/(DUR*.45)):1;
+  var eo=p>=1?1:1-Math.exp(-6*p)*Math.cos(3.2*Math.PI*p),ei=q*q*(2.2*q-1.2),oa=Math.min(1,p*4);
+  live.forEach(function(n){
+    var e=n.leaving?ei:eo,a=n.leaving?q:oa;
+    n.dx=n.sx+(n.tx-n.sx)*e;n.dy=n.sy+(n.ty-n.sy)*e;
+    n.ds=Math.max(0,n.ss+(n.tts-n.ss)*e);n.da=n.sa+(n.tta-n.sa)*a;
+  });
+  live.forEach(draw);
+  if(p<1){raf=requestAnimationFrame(step);return}
+  live=live.filter(function(n){
+    if(n.leaving){n.g.remove();if(n.ln)n.ln.remove();n.g=null;n.ln=null;n.leaving=false;return false}
+    return true;
+  });
+  applyB(newB);
+}
+function update(){
+  var out=[];layout(root,0,0,0,null,out);
+  var set=new Set(out);
+  out.forEach(function(n){
+    if(!n.g){
+      mk(n);live.push(n);var p=n.par;
+      if(p){n.dx=p.dx;n.dy=p.dy;n.ds=0;n.da=0}else{n.dx=n.tx;n.dy=n.ty;n.ds=1;n.da=1}
+    }
+    n.leaving=false;n.g.style.pointerEvents="";n.tts=1;n.tta=1;
+  });
+  live.forEach(function(n){
+    if(!set.has(n)){
+      var a=n.par;while(a&&!set.has(a))a=a.par;
+      n.leaving=true;n.tx=a.tx;n.ty=a.ty;n.tts=0;n.tta=0;n.g.style.pointerEvents="none";
+    }
+    bdg(n);n.sx=n.dx;n.sy=n.dy;n.ss=n.ds;n.sa=n.da;
+  });
+  var b={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9};
+  out.forEach(function(n){b.x0=Math.min(b.x0,n.tx-n.r);b.x1=Math.max(b.x1,n.tx+n.r);b.y0=Math.min(b.y0,n.ty-n.r);b.y1=Math.max(b.y1,n.ty+n.r)});
+  b.x0-=30;b.y0-=30;b.x1+=30;b.y1+=30;newB=b;
+  if(dispB){applyB({x0:Math.min(dispB.x0,b.x0),y0:Math.min(dispB.y0,b.y0),x1:Math.max(dispB.x1,b.x1),y1:Math.max(dispB.y1,b.y1)})}
+  else{applyB(b)}
+  if(firstRun){box.scrollLeft=-dispB.x0*Z-box.clientWidth/2;box.scrollTop=-dispB.y0*Z-box.clientHeight/2;firstRun=false}
+  cancelAnimationFrame(raf);t0=performance.now();
+  if(DUR===0)step(t0);else raf=requestAnimationFrame(step);
+}
+function closeAdd(){target=null;document.getElementById("adder").classList.remove("on")}
+function commit(){
+  var v=document.getElementById("adin").value.trim();
+  if(target&&v){var c=N(v);c.par=target;target.k.push(c);target.o=true}
+  closeAdd();update();
+}
+document.getElementById("adok").onclick=commit;
+document.getElementById("adno").onclick=closeAdd;
+document.getElementById("adin").onkeydown=function(e){if(e.key==="Enter")commit();else if(e.key==="Escape")closeAdd()};
+function setAll(n,v){n.o=v;n.k.forEach(function(c){setAll(c,v)})}
+document.getElementById("all").onclick=function(){setAll(root,true);update()};
+document.getElementById("none").onclick=function(){setAll(root,false);root.o=true;update()};
+function zoom(f){
+  var o=Z,cx=box.scrollLeft+box.clientWidth/2,cy=box.scrollTop+box.clientHeight/2;
+  Z=Math.max(.3,Math.min(2.4,Z*f));applyB(dispB);
+  box.scrollLeft=cx*Z/o-box.clientWidth/2;box.scrollTop=cy*Z/o-box.clientHeight/2;
+}
+var ptrs=new Map(),pan=null,pinch=null,moved=false,noClick=false;
+function dist(){var a=Array.from(ptrs.values());return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}
+function mid(){var a=Array.from(ptrs.values()),r=box.getBoundingClientRect();return {x:(a[0].x+a[1].x)/2-r.left,y:(a[0].y+a[1].y)/2-r.top}}
+function startPan(p){pan={x:p.x,y:p.y,sl:box.scrollLeft,st:box.scrollTop}}
+box.addEventListener("pointerdown",function(e){
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===1){startPan(ptrs.get(e.pointerId));moved=false}
+  else if(ptrs.size===2){var m=mid();pan=null;moved=true;pinch={d:dist()||1,z:Z,cx:(box.scrollLeft+m.x)/Z,cy:(box.scrollTop+m.y)/Z}}
+});
+box.addEventListener("pointermove",function(e){
+  var p=ptrs.get(e.pointerId);if(!p)return;p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size===2&&pinch){
+    var m=mid();Z=Math.max(.3,Math.min(2.4,pinch.z*dist()/pinch.d));applyB(dispB);
+    box.scrollLeft=pinch.cx*Z-m.x;box.scrollTop=pinch.cy*Z-m.y;
+  }else if(pan&&ptrs.size===1){
+    var dx=p.x-pan.x,dy=p.y-pan.y;
+    if(!moved&&Math.hypot(dx,dy)>6){moved=true;try{box.setPointerCapture(e.pointerId)}catch(_){}}
+    if(moved){box.scrollLeft=pan.sl-dx;box.scrollTop=pan.st-dy}
+  }
+});
+function up(e){
+  if(!ptrs.delete(e.pointerId))return;
+  if(moved){noClick=true;setTimeout(function(){noClick=false},0)}
+  pinch=null;
+  if(ptrs.size===1){startPan(Array.from(ptrs.values())[0])}else pan=null;
+}
+box.addEventListener("pointerup",up);box.addEventListener("pointercancel",up);
+box.addEventListener("click",function(e){if(noClick){e.stopPropagation();e.preventDefault()}},true);
+box.addEventListener("wheel",function(e){
+  if(!e.ctrlKey)return;e.preventDefault();
+  var r=box.getBoundingClientRect(),fx=e.clientX-r.left,fy=e.clientY-r.top,cx=(box.scrollLeft+fx)/Z,cy=(box.scrollTop+fy)/Z;
+  Z=Math.max(.3,Math.min(2.4,Z*Math.exp(-e.deltaY*.01)));applyB(dispB);
+  box.scrollLeft=cx*Z-fx;box.scrollTop=cy*Z-fy;
+},{passive:false});
+document.getElementById("zi").onclick=function(){zoom(1.2)};
+document.getElementById("zo").onclick=function(){zoom(1/1.2)};
+update();
+</script>
+</body>
+</html>

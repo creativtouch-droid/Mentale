@@ -1,0 +1,29 @@
+CARTE MENTALE - FABRIQUER L'APK ANDROID
+=======================================
+
+Ce dossier contient la carte mentale et tout ce qu'il faut pour que GitHub
+fabrique l'APK à ta place (gratuit, environ 5 à 10 minutes).
+
+ÉTAPES (depuis un ordinateur, c'est le plus simple)
+1. Crée un compte gratuit sur github.com, puis un nouveau dépôt (bouton "New").
+   Nom au choix, par exemple "carte-mentale". Laisse-le en privé si tu veux.
+2. Dézippe ce dossier. Dans le dépôt, clique "uploading an existing file",
+   puis glisse TOUT le contenu du dossier dézippé, y compris le dossier
+   caché ".github". Vérifie que ".github/workflows/build-apk.yml" apparaît
+   dans la liste avant de valider ("Commit changes").
+3. Ouvre l'onglet "Actions" du dépôt. Le travail "Build APK" démarre tout seul.
+   S'il ne démarre pas : clique "Build APK" à gauche, puis "Run workflow".
+4. Quand il est vert (coche verte), ouvre-le et télécharge
+   "carte-mentale-apk" tout en bas (dans "Artifacts").
+   C'est un zip qui contient app-debug.apk.
+5. Envoie app-debug.apk sur ton téléphone Android et ouvre-le.
+   Android demandera d'autoriser l'installation depuis cette source :
+   accepte, c'est normal pour une appli qui ne vient pas du Play Store.
+
+NOTES
+- L'APK fonctionne hors ligne. Seule la police Fjalla One ne se charge pas
+  sans connexion : une police condensée du téléphone la remplace.
+- C'est un APK de test (signé avec une clé de debug) : parfait pour
+  installer chez toi ou le partager, mais pas pour le Play Store.
+- Pour changer le contenu de la carte : modifie www/index.html, puis
+  renvoie le fichier dans le dépôt. Un nouvel APK se fabrique tout seul.
